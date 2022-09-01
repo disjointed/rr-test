@@ -1,0 +1,42 @@
+services:
+  front:
+    container_name: front.dock
+    depends_on:
+      - back
+      - db
+    build: ./front
+    ports:
+      - 8080:8080
+    volumes:
+      - ./front:/home/node/app
+    networks:
+      - dev
+    restart: always
+  back:
+    container_name: back.dock
+    depends_on:
+      - db
+    build: ./back
+    ports:
+      - 8000:8000
+    volumes:
+      - ./back:/home/myuser/app
+    networks:
+      - dev
+    restart: always
+  db:
+    container_name: db.dock
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/dumps:/dumps
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    networks:
+      - dev
+    restart: always
+
+networks:
+  dev:
